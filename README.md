@@ -234,6 +234,37 @@ PROFILE = {
 }
 ```
 
+### Configuração do WhatsApp Business API
+
+Para receber notificações via WhatsApp, você precisa configurar o WhatsApp Business API:
+
+#### 1. Criar uma conta Meta for Developers
+1. Acesse [developers.facebook.com](https://developers.facebook.com)
+2. Crie uma conta ou faça login
+3. Crie um novo app do tipo "Business"
+
+#### 2. Configurar WhatsApp Business API
+1. No painel do app, adicione o produto "WhatsApp"
+2. Configure um número de telefone business
+3. Obtenha o `Phone Number ID` e `Access Token`
+
+#### 3. Configurar Webhook (opcional)
+Para receber confirmações de entrega, configure um webhook endpoint.
+
+#### 4. Variáveis de ambiente necessárias
+```bash
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id  # Do painel Meta
+WHATSAPP_ACCESS_TOKEN=your-access-token        # Token permanente
+WHATSAPP_RECIPIENT_NUMBER=+5511999999999       # Seu número (com código do país)
+```
+
+#### 5. Testar configuração
+```bash
+python -c "from src.notifications.whatsapp_notifier import WhatsAppNotifier; WhatsAppNotifier().test_connection()"
+```
+
+**Nota:** O WhatsApp Business API tem limitações para contas não verificadas. Para uso pessoal, recomenda-se usar o Telegram como alternativa.
+
 ## 🎯 Como Usar
 
 ### Templates de Candidatura
@@ -348,7 +379,8 @@ jobhunter-bot/
 │   ├── notifications/
 │   │   ├── __init__.py
 │   │   ├── email_notifier.py      # Notificações por email
-│   │   └── telegram_notifier.py   # Notificações por Telegram
+│   │   ├── telegram_notifier.py   # Notificações por Telegram
+│   │   └── whatsapp_notifier.py   # Notificações por WhatsApp
 │   ├── email/
 │   │   ├── __init__.py
 │   │   ├── email_sender.py        # Envio de emails de candidatura
