@@ -1,0 +1,43 @@
+{
+  "name": "jobhunter-bot",
+  "version": "1.0.0",
+  "description": "🤖 Bot automatizado para busca e candidatura em vagas de emprego",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"pnpm run backend:dev\" \"pnpm run frontend:dev\"",
+    "frontend:dev": "pnpm --filter frontend dev",
+    "frontend:build": "pnpm --filter frontend build",
+    "frontend:start": "pnpm --filter frontend start",
+    "backend:dev": "cd backend && python3 src/web/app.py",
+    "backend:setup": "cd backend && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+    "setup": "pnpm install && pnpm run backend:setup",
+    "build": "pnpm run frontend:build",
+    "start": "concurrently \"pnpm run backend:dev\" \"pnpm run frontend:start\"",
+    "test": "pnpm --filter frontend test",
+    "lint": "pnpm --filter frontend lint",
+    "clean": "pnpm --filter frontend clean && rm -rf backend/venv",
+    "check:ports": "lsof -i :3000 || echo 'Port 3000 is free' && lsof -i :5000 || echo 'Port 5000 is free'"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "keywords": [
+    "job-hunting",
+    "automation",
+    "web-scraping",
+    "linkedin",
+    "twitter",
+    "recruitment",
+    "bot"
+  ],
+  "author": "Adam Snows",
+  "license": "MIT"
+}

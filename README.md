@@ -28,6 +28,9 @@ Um bot inteligente em Python para buscar automaticamente vagas de emprego basead
 - **Banco de dados**: SQLite (local) ou PostgreSQL (produção)
 - **Notificações**: SMTP, Telegram Bot API, WhatsApp Business API
 - **Análise de texto**: NLTK/spaCy para matching de skills
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend API**: Flask, SQLAlchemy
+- **Dev Environment**: pnpm workspace, concurrently
 
 ## 🚀 Plataformas Suportadas
 
@@ -55,9 +58,13 @@ python --version
 
 # Git
 git --version
+
+# Node.js 18+ e pnpm 8+ (opcional, para frontend)
+node --version
+pnpm --version  # ou npm install -g pnpm
 ```
 
-### Setup do Projeto
+### Método 1: Setup Tradicional (Python)
 ```bash
 # Clone o repositório
 git clone https://github.com/your-username/jobhunter-bot.git
@@ -68,14 +75,22 @@ python -m venv venv
 source venv/bin/activate  # macOS/Linux
 # ou
 venv\Scripts\activate  # Windows
+```
 
+### Método 2: Setup com pnpm workspace (Recomendado para desenvolvimento completo)
 ```bash
 # Clone o repositório
 git clone https://github.com/your-username/jobhunter-bot.git
 cd jobhunter-bot
 
-# Crie um ambiente virtual
-python -m venv venv
+# Configure tudo de uma vez usando pnpm
+pnpm run setup
+
+# OU use o Makefile
+make setup
+```
+
+Para mais informações sobre o workspace pnpm, consulte [PNPM-WORKSPACE.md](PNPM-WORKSPACE.md).
 source venv/bin/activate  # macOS/Linux
 # ou
 venv\Scripts\activate  # Windows
@@ -348,11 +363,26 @@ python main.py --daemon
 python main.py --stop
 ```
 
-### Interface Web (Planejada)
+### Execução com pnpm workspace (Desenvolvimento completo)
 ```bash
-# Iniciar interface web
-python app.py
-# Acesse: http://localhost:5000
+# Iniciar frontend e backend simultaneamente
+pnpm run dev
+
+# Ou usando o Makefile
+make dev-pnpm
+
+# Iniciar apenas o frontend
+pnpm run frontend:dev
+
+# Iniciar apenas o backend
+pnpm run backend:dev
+```
+
+### Interface Web (Dashboard)
+```bash
+# Iniciar frontend e backend
+pnpm run dev
+# Acesse: http://localhost:3000
 ```
 
 ## 📊 Estrutura do Projeto

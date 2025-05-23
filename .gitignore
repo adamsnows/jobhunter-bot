@@ -177,3 +177,4 @@ selenium-*
 
 # Chrome cache
 chrome_user_data/
+node_modules
