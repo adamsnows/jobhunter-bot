@@ -29,7 +29,7 @@ pnpm run dev
 
 ```
 jobhunter-bot/
-├── backend/          # Backend Flask 
+├── backend/          # Backend Flask
 ├── frontend/         # Frontend Next.js (workspace package)
 ├── scripts/          # Scripts utilitários
 ├── package.json      # Configuração raiz
@@ -78,8 +78,32 @@ make clean       # Limpa o ambiente virtual
 cd backend && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt
 ```
 
+**Erro "ModuleNotFoundError: No module named 'flask'":**
+```bash
+# Certifique-se de que o ambiente virtual está ativado
+cd backend && source venv/bin/activate
+
+# Verifique se Flask está instalado
+pip list | grep flask
+
+# Se não estiver, instale manualmente
+pip install flask==2.3.3 flask-sqlalchemy==3.0.5 flask-cors==4.0.0
+
+# Para problemas com o pacote 'blis' (comum em sistemas macOS):
+pip install --no-binary=blis blis
+# OU
+ARCHFLAGS="-arch x86_64" pip install -r requirements.txt
+```
+
+**Verificar e reparar a instalação do Spacy:**
+```bash
+cd backend && source venv/bin/activate
+pip install -U spacy
+python -m spacy validate
+```
+
 ## 📝 Notas adicionais
 
 - O backend não é gerenciado pelo pnpm, mas os scripts no package.json raiz facilitam a interação com ele
-- O frontend é executado na porta 3000 e o backend na porta 5000
+- O frontend é executado na porta 3000 e o backend na porta 5001
 - Certifique-se de que estas portas estão disponíveis antes de iniciar

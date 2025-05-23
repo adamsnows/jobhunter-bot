@@ -371,6 +371,11 @@ pnpm run dev
 # Ou usando o Makefile
 make dev-pnpm
 
+# Resolver problemas com dependências Python
+pnpm run backend:check
+# ou
+make backend-diagnostic
+
 # Iniciar apenas o frontend
 pnpm run frontend:dev
 

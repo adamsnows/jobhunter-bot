@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from "@/utils/constants";
+import { useEffect, useState } from "react";
 
 interface LogEntry {
   id: number;
   timestamp: string;
-  level: 'info' | 'warning' | 'error' | 'success';
+  level: "info" | "warning" | "error" | "success";
   message: string;
   component?: string;
   details?: string;
@@ -14,18 +15,18 @@ interface LogEntry {
 export default function LogsViewer() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   const fetchLogs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/logs');
+      const response = await fetch(API_ENDPOINTS.LOGS);
       const data = await response.json();
       if (data.success) {
         setLogs(data.data);
       }
     } catch (error) {
-      console.error('Error fetching logs:', error);
+      console.error("Error fetching logs:", error);
     } finally {
       setLoading(false);
     }
@@ -33,12 +34,12 @@ export default function LogsViewer() {
 
   useEffect(() => {
     fetchLogs();
-    
+
     let interval: NodeJS.Timeout;
     if (autoRefresh) {
       interval = setInterval(fetchLogs, 5000); // Atualiza a cada 5s
     }
-    
+
     return () => {
       if (interval) {
         clearInterval(interval);
@@ -48,52 +49,52 @@ export default function LogsViewer() {
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case 'info':
-        return 'bg-blue-100 text-blue-800';
-      case 'warning':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'error':
-        return 'bg-red-100 text-red-800';
-      case 'success':
-        return 'bg-green-100 text-green-800';
+      case "info":
+        return "bg-blue-100 text-blue-800";
+      case "warning":
+        return "bg-yellow-100 text-yellow-800";
+      case "error":
+        return "bg-red-100 text-red-800";
+      case "success":
+        return "bg-green-100 text-green-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getLevelIcon = (level: string) => {
     switch (level) {
-      case 'info':
-        return 'ℹ️';
-      case 'warning':
-        return '⚠️';
-      case 'error':
-        return '❌';
-      case 'success':
-        return '✅';
+      case "info":
+        return "ℹ️";
+      case "warning":
+        return "⚠️";
+      case "error":
+        return "❌";
+      case "success":
+        return "✅";
       default:
-        return '📝';
+        return "📝";
     }
   };
 
   const clearLogs = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/logs', {
-        method: 'DELETE',
+      const response = await fetch(API_ENDPOINTS.LOGS, {
+        method: "DELETE",
       });
       const data = await response.json();
       if (data.success) {
         setLogs([]);
-        alert('🗑️ Logs limpos com sucesso!');
+        alert("🗑️ Logs limpos com sucesso!");
       }
     } catch (error) {
-      console.error('Error clearing logs:', error);
-      alert('❌ Erro ao limpar logs');
+      console.error("Error clearing logs:", error);
+      alert("❌ Erro ao limpar logs");
     }
   };
 
-  const filteredLogs = logs.filter(log => 
-    filter === 'all' || log.level === filter
+  const filteredLogs = logs.filter(
+    (log) => filter === "all" || log.level === filter
   );
 
   if (loading) {
@@ -108,9 +109,7 @@ export default function LogsViewer() {
     <div className="space-y-6">
       {/* Header com controles */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">
-          📝 Logs do Sistema
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900">📝 Logs do Sistema</h2>
         <div className="flex items-center space-x-4">
           {/* Auto-refresh toggle */}
           <label className="flex items-center">
@@ -143,7 +142,7 @@ export default function LogsViewer() {
           >
             🔄 Atualizar
           </button>
-          
+
           <button
             onClick={clearLogs}
             className="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50"
@@ -158,18 +157,26 @@ export default function LogsViewer() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">{filteredLogs.length}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {filteredLogs.length}
+              </div>
               <div className="text-sm text-gray-500">
-                {filter === 'all' ? 'Total' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                {filter === "all"
+                  ? "Total"
+                  : filter.charAt(0).toUpperCase() + filter.slice(1)}
               </div>
             </div>
-            {filter === 'all' && (
+            {filter === "all" && (
               <>
-                {['info', 'success', 'warning', 'error'].map((level) => {
-                  const count = logs.filter(log => log.level === level).length;
+                {["info", "success", "warning", "error"].map((level) => {
+                  const count = logs.filter(
+                    (log) => log.level === level
+                  ).length;
                   return (
                     <div key={level} className="text-center">
-                      <div className="text-lg font-semibold text-gray-900">{count}</div>
+                      <div className="text-lg font-semibold text-gray-900">
+                        {count}
+                      </div>
                       <div className="text-xs text-gray-500">
                         {getLevelIcon(level)} {level}
                       </div>
@@ -196,10 +203,9 @@ export default function LogsViewer() {
             Nenhum log encontrado
           </h3>
           <p className="text-gray-500">
-            {filter === 'all' 
-              ? 'Nenhum log foi registrado ainda.'
-              : `Nenhum log do tipo "${filter}".`
-            }
+            {filter === "all"
+              ? "Nenhum log foi registrado ainda."
+              : `Nenhum log do tipo "${filter}".`}
           </p>
         </div>
       ) : (
@@ -210,7 +216,11 @@ export default function LogsViewer() {
                 <li key={log.id} className="px-4 py-4 sm:px-6">
                   <div className="flex items-start space-x-3">
                     <div className="flex-shrink-0">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelColor(log.level)}`}>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelColor(
+                          log.level
+                        )}`}
+                      >
                         {getLevelIcon(log.level)} {log.level.toUpperCase()}
                       </span>
                     </div>
@@ -226,7 +236,7 @@ export default function LogsViewer() {
                             </>
                           )}
                           <time dateTime={log.timestamp}>
-                            {new Date(log.timestamp).toLocaleString('pt-BR')}
+                            {new Date(log.timestamp).toLocaleString("pt-BR")}
                           </time>
                         </div>
                       </div>
@@ -251,7 +261,7 @@ export default function LogsViewer() {
         <div className="text-center">
           <button
             onClick={() => {
-              const element = document.querySelector('.max-h-96');
+              const element = document.querySelector(".max-h-96");
               if (element) {
                 element.scrollTop = element.scrollHeight;
               }

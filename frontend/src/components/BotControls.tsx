@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from "@/utils/constants";
+import { useEffect, useState } from "react";
 
 interface BotControlsProps {
   onStatusChange: () => void;
@@ -9,18 +10,18 @@ interface BotControlsProps {
 export default function BotControls({ onStatusChange }: BotControlsProps) {
   const [isRunning, setIsRunning] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [lastUpdate, setLastUpdate] = useState<string>('');
+  const [lastUpdate, setLastUpdate] = useState<string>("");
 
   const checkStatus = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/daemon/status');
+      const response = await fetch(API_ENDPOINTS.DAEMON.STATUS);
       const data = await response.json();
       if (data.success) {
         setIsRunning(data.data.running);
         setLastUpdate(new Date().toLocaleTimeString());
       }
     } catch (error) {
-      console.error('Error checking status:', error);
+      console.error("Error checking status:", error);
       setIsRunning(false);
     }
   };
@@ -28,24 +29,24 @@ export default function BotControls({ onStatusChange }: BotControlsProps) {
   const startBot = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/daemon/start', {
-        method: 'POST',
+      const response = await fetch(API_ENDPOINTS.DAEMON.START, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       const data = await response.json();
-      
+
       if (data.success) {
         setIsRunning(true);
         onStatusChange();
-        alert('✅ Bot iniciado com sucesso!');
+        alert("✅ Bot iniciado com sucesso!");
       } else {
         alert(`❌ Erro ao iniciar: ${data.message || data.error}`);
       }
     } catch (error) {
-      console.error('Error starting bot:', error);
-      alert('❌ Erro ao conectar com o servidor');
+      console.error("Error starting bot:", error);
+      alert("❌ Erro ao conectar com o servidor");
     } finally {
       setLoading(false);
     }
@@ -54,24 +55,24 @@ export default function BotControls({ onStatusChange }: BotControlsProps) {
   const stopBot = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/daemon/stop', {
-        method: 'POST',
+      const response = await fetch(API_ENDPOINTS.DAEMON.STOP, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       const data = await response.json();
-      
+
       if (data.success) {
         setIsRunning(false);
         onStatusChange();
-        alert('🛑 Bot parado com sucesso!');
+        alert("🛑 Bot parado com sucesso!");
       } else {
         alert(`❌ Erro ao parar: ${data.message || data.error}`);
       }
     } catch (error) {
-      console.error('Error stopping bot:', error);
-      alert('❌ Erro ao conectar com o servidor');
+      console.error("Error stopping bot:", error);
+      alert("❌ Erro ao conectar com o servidor");
     } finally {
       setLoading(false);
     }
@@ -87,13 +88,17 @@ export default function BotControls({ onStatusChange }: BotControlsProps) {
     <div className="flex items-center space-x-4">
       {/* Status Indicator */}
       <div className="flex items-center space-x-2">
-        <div className={`w-3 h-3 rounded-full ${
-          isRunning ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-        }`}></div>
-        <span className={`text-sm font-medium ${
-          isRunning ? 'text-green-700' : 'text-red-700'
-        }`}>
-          {isRunning ? 'Ativo' : 'Parado'}
+        <div
+          className={`w-3 h-3 rounded-full ${
+            isRunning ? "bg-green-500 animate-pulse" : "bg-red-500"
+          }`}
+        ></div>
+        <span
+          className={`text-sm font-medium ${
+            isRunning ? "text-green-700" : "text-red-700"
+          }`}
+        >
+          {isRunning ? "Ativo" : "Parado"}
         </span>
       </div>
 
@@ -117,7 +122,7 @@ export default function BotControls({ onStatusChange }: BotControlsProps) {
             ) : (
               <span className="mr-2">▶️</span>
             )}
-            {loading ? 'Iniciando...' : 'Iniciar Bot'}
+            {loading ? "Iniciando..." : "Iniciar Bot"}
           </button>
         ) : (
           <button
@@ -130,10 +135,10 @@ export default function BotControls({ onStatusChange }: BotControlsProps) {
             ) : (
               <span className="mr-2">⏹️</span>
             )}
-            {loading ? 'Parando...' : 'Parar Bot'}
+            {loading ? "Parando..." : "Parar Bot"}
           </button>
         )}
-        
+
         <button
           onClick={checkStatus}
           disabled={loading}

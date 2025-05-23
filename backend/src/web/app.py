@@ -31,35 +31,35 @@ app.config['SQLALCHEMY_DATABASE_URI'] = get_database_url()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Habilitar CORS para comunicação com Next.js
-CORS(app, origins=['http://localhost:3000'])
+CORS(app, origins=['http://localhost:3000', 'http://localhost:3001'])
 
 db = SQLAlchemy(app)
 
 class DashboardController:
     """Controlador do dashboard"""
-    
+
     def __init__(self):
         self.daemon_pid_file = '/tmp/jobhunter_daemon.pid'
-    
+
     def is_daemon_running(self):
         """Verifica se o daemon está rodando"""
         if not os.path.exists(self.daemon_pid_file):
             return False
-        
+
         try:
             with open(self.daemon_pid_file, 'r') as f:
                 pid = int(f.read().strip())
-            
+
             # Verifica se o processo existe
             return psutil.pid_exists(pid)
         except:
             return False
-    
+
     def start_daemon(self):
         """Inicia o daemon"""
         if self.is_daemon_running():
             return False, "Daemon já está rodando"
-        
+
         try:
             # Importa e inicia o daemon
             from src.bot.job_hunter_daemon import JobHunterDaemon
@@ -68,63 +68,63 @@ class DashboardController:
             return True, "Daemon iniciado com sucesso"
         except Exception as e:
             return False, f"Erro ao iniciar daemon: {str(e)}"
-    
+
     def stop_daemon(self):
         """Para o daemon"""
         if not self.is_daemon_running():
             return False, "Daemon não está rodando"
-        
+
         try:
             with open(self.daemon_pid_file, 'r') as f:
                 pid = int(f.read().strip())
-            
+
             os.kill(pid, signal.SIGTERM)
-            
+
             # Remove o arquivo PID
             if os.path.exists(self.daemon_pid_file):
                 os.remove(self.daemon_pid_file)
-            
+
             return True, "Daemon parado com sucesso"
         except Exception as e:
             return False, f"Erro ao parar daemon: {str(e)}"
-    
+
     def get_stats(self):
         """Obtém estatísticas do bot"""
         try:
             # Conecta ao banco
             conn = sqlite3.connect('data/jobs.db')
             cursor = conn.cursor()
-            
+
             # Estatísticas gerais
             cursor.execute("SELECT COUNT(*) FROM jobs")
             total_jobs = cursor.fetchone()[0] or 0
-            
+
             cursor.execute("SELECT COUNT(*) FROM applications")
             total_applications = cursor.fetchone()[0] or 0
-            
+
             # Estatísticas de hoje
             today = datetime.now().strftime('%Y-%m-%d')
             cursor.execute("SELECT COUNT(*) FROM jobs WHERE DATE(created_at) = ?", (today,))
             jobs_today = cursor.fetchone()[0] or 0
-            
+
             cursor.execute("SELECT COUNT(*) FROM applications WHERE DATE(sent_at) = ?", (today,))
             applications_today = cursor.fetchone()[0] or 0
-            
+
             # Taxa de sucesso
             cursor.execute("SELECT COUNT(*) FROM applications WHERE status = 'sent'")
             successful_apps = cursor.fetchone()[0] or 0
-            
+
             success_rate = (successful_apps / total_applications * 100) if total_applications > 0 else 0
-            
+
             # Últimas vagas
             cursor.execute("""
-                SELECT title, company, location, match_score, created_at 
-                FROM jobs 
-                ORDER BY created_at DESC 
+                SELECT title, company, location, match_score, created_at
+                FROM jobs
+                ORDER BY created_at DESC
                 LIMIT 10
             """)
             recent_jobs = cursor.fetchall()
-            
+
             # Últimas candidaturas
             cursor.execute("""
                 SELECT j.title, j.company, a.status, a.sent_at
@@ -134,9 +134,9 @@ class DashboardController:
                 LIMIT 10
             """)
             recent_applications = cursor.fetchall()
-            
+
             conn.close()
-            
+
             return {
                 'total_jobs': total_jobs,
                 'total_applications': total_applications,
@@ -197,7 +197,7 @@ def start_daemon():
     try:
         success, message = dashboard.start_daemon()
         return jsonify({
-            'success': success, 
+            'success': success,
             'message': message
         })
     except Exception as e:
@@ -213,7 +213,7 @@ def stop_daemon():
     try:
         success, message = dashboard.stop_daemon()
         return jsonify({
-            'success': success, 
+            'success': success,
             'message': message
         })
     except Exception as e:
@@ -248,47 +248,47 @@ def api_jobs():
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 20, type=int)
         search = request.args.get('search', '')
-        
+
         # Validação
         if per_page > 100:
             per_page = 100
-        
+
         conn = sqlite3.connect('data/jobs.db')
         cursor = conn.cursor()
-        
+
         # Query base
         base_query = """
             SELECT id, title, company, location, salary, match_score, url, created_at
-            FROM jobs 
+            FROM jobs
         """
-        
+
         # Adicionar filtro de busca se fornecido
         params = []
         if search:
             base_query += " WHERE title LIKE ? OR company LIKE ? OR location LIKE ?"
             search_term = f"%{search}%"
             params.extend([search_term, search_term, search_term])
-        
+
         # Adicionar ordenação e paginação
         offset = (page - 1) * per_page
         query = base_query + " ORDER BY created_at DESC LIMIT ? OFFSET ?"
         params.extend([per_page, offset])
-        
+
         cursor.execute(query, params)
         jobs_data = cursor.fetchall()
-        
+
         # Total de vagas para paginação
         count_query = "SELECT COUNT(*) FROM jobs"
         count_params = []
         if search:
             count_query += " WHERE title LIKE ? OR company LIKE ? OR location LIKE ?"
             count_params = [search_term, search_term, search_term]
-        
+
         cursor.execute(count_query, count_params)
         total = cursor.fetchone()[0] or 0
-        
+
         conn.close()
-        
+
         # Formatar dados
         jobs = []
         for job in jobs_data:
@@ -302,7 +302,7 @@ def api_jobs():
                 'url': job[6],
                 'created_at': job[7]
             })
-        
+
         return jsonify({
             'success': True,
             'data': {
@@ -328,23 +328,23 @@ def api_job_detail(job_id):
     try:
         conn = sqlite3.connect('data/jobs.db')
         cursor = conn.cursor()
-        
+
         cursor.execute("""
-            SELECT id, title, company, location, salary, description, 
+            SELECT id, title, company, location, salary, description,
                    requirements, match_score, url, created_at
-            FROM jobs 
+            FROM jobs
             WHERE id = ?
         """, (job_id,))
-        
+
         job_data = cursor.fetchone()
         conn.close()
-        
+
         if not job_data:
             return jsonify({
                 'success': False,
                 'error': 'Job not found'
             }), 404
-        
+
         job = {
             'id': job_data[0],
             'title': job_data[1],
@@ -357,7 +357,7 @@ def api_job_detail(job_id):
             'url': job_data[8],
             'created_at': job_data[9]
         }
-        
+
         return jsonify({
             'success': True,
             'data': job
@@ -377,48 +377,48 @@ def api_applications():
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 20, type=int)
         status_filter = request.args.get('status', '')
-        
+
         # Validação
         if per_page > 100:
             per_page = 100
-        
+
         conn = sqlite3.connect('data/jobs.db')
         cursor = conn.cursor()
-        
+
         # Query base
         base_query = """
-            SELECT a.id, j.title, j.company, a.status, a.sent_at, 
+            SELECT a.id, j.title, j.company, a.status, a.sent_at,
                    a.email_subject, a.response_received, j.location
             FROM applications a
             JOIN jobs j ON a.job_id = j.id
         """
-        
+
         # Adicionar filtro de status se fornecido
         params = []
         if status_filter:
             base_query += " WHERE a.status = ?"
             params.append(status_filter)
-        
+
         # Adicionar ordenação e paginação
         offset = (page - 1) * per_page
         query = base_query + " ORDER BY a.sent_at DESC LIMIT ? OFFSET ?"
         params.extend([per_page, offset])
-        
+
         cursor.execute(query, params)
         apps_data = cursor.fetchall()
-        
+
         # Total de candidaturas para paginação
         count_query = "SELECT COUNT(*) FROM applications a"
         count_params = []
         if status_filter:
             count_query += " WHERE a.status = ?"
             count_params = [status_filter]
-        
+
         cursor.execute(count_query, count_params)
         total = cursor.fetchone()[0] or 0
-        
+
         conn.close()
-        
+
         # Formatar dados
         applications = []
         for app in apps_data:
@@ -432,7 +432,7 @@ def api_applications():
                 'response_received': app[6],
                 'location': app[7]
             })
-        
+
         return jsonify({
             'success': True,
             'data': {
@@ -460,7 +460,7 @@ def api_settings():
         # Carrega configurações do .env (sem valores sensíveis)
         env_vars = {}
         sensitive_keys = ['PASSWORD', 'SECRET', 'KEY', 'TOKEN', 'API_KEY']
-        
+
         try:
             with open('.env', 'r') as f:
                 for line in f:
@@ -473,7 +473,7 @@ def api_settings():
                             env_vars[key] = value
         except FileNotFoundError:
             pass
-        
+
         return jsonify({
             'success': True,
             'data': {
@@ -497,7 +497,7 @@ def api_update_settings():
                 'success': False,
                 'error': 'No data provided'
             }), 400
-        
+
         # Aqui você implementaria a lógica para atualizar configurações
         # Por enquanto, apenas retorna sucesso
         return jsonify({
@@ -518,20 +518,20 @@ def api_logs():
     try:
         lines = request.args.get('lines', 100, type=int)
         level = request.args.get('level', 'all')
-        
+
         # Validação
         if lines > 1000:
             lines = 1000
-        
+
         log_file = 'data/logs/jobhunter.log'
         logs = []
-        
+
         if os.path.exists(log_file):
             with open(log_file, 'r') as f:
                 all_logs = f.readlines()
                 # Pegar as últimas N linhas
                 recent_logs = all_logs[-lines:] if len(all_logs) > lines else all_logs
-                
+
                 # Filtrar por nível se especificado
                 for log_line in recent_logs:
                     if level == 'all' or level.upper() in log_line:
@@ -540,7 +540,7 @@ def api_logs():
                             'message': log_line.strip(),
                             'level': 'INFO'  # Simplificado por enquanto
                         })
-        
+
         return jsonify({
             'success': True,
             'data': {
@@ -562,9 +562,12 @@ if __name__ == '__main__':
             db.create_all()
         except Exception as e:
             logger.warning(f"Database initialization warning: {str(e)}")
-    
+
+    # Usar porta 5001 para evitar conflitos com AirPlay no macOS
+    port = 5001
+
     logger.info("🚀 JobHunter Bot API iniciada!")
-    logger.info("📡 API endpoints disponíveis em: http://localhost:5000/api")
+    logger.info(f"📡 API endpoints disponíveis em: http://localhost:{port}/api")
     logger.info("🔧 Ctrl+C para parar")
-    
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+    app.run(host='0.0.0.0', port=port, debug=True)

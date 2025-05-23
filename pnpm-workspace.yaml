@@ -1,0 +1,4 @@
+packages:
+  - 'frontend'
+  # O backend não é um package Node.js, então não incluímos aqui
+  # Mas gerenciamos via scripts no package.json raiz

@@ -1,7 +1,7 @@
 # 🤖 JobHunter Bot - Makefile
 # Comandos para desenvolvimento e produção
 
-.PHONY: help dev dev-python dev-bash dev-pnpm install clean setup test
+.PHONY: help dev dev-python dev-bash dev-pnpm install clean setup test backend-diagnostic
 
 # Cores para output
 GREEN := \033[0;32m
@@ -30,6 +30,7 @@ help:
 	@echo "  ${YELLOW}make test${NC}       - Executa testes"
 	@echo "  ${YELLOW}make lint${NC}       - Verifica código"
 	@echo "  ${YELLOW}make logs${NC}       - Mostra logs em tempo real"
+	@echo "  ${YELLOW}make backend-diagnostic${NC} - Diagnostica problemas do backend"
 	@echo ""
 
 # Desenvolvimento - Inicia ambos os serviços (método Python)
@@ -56,7 +57,11 @@ dev-backend:
 dev-pnpm:
 	@echo "${GREEN}🚀 Iniciando JobHunter Bot (PNPM Workspace)...${NC}"
 	@python3 scripts/pnpm_dev_server.py
-	@cd backend && source venv/bin/activate && python src/web/app.py
+
+# Diagnóstico do Backend
+backend-diagnostic:
+	@echo "${BLUE}🩺 Executando diagnóstico do backend...${NC}"
+	@python3 scripts/check_backend.py
 
 # Configuração inicial completa
 setup:

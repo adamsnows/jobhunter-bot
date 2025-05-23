@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from "@/utils/constants";
+import { useEffect, useState } from "react";
 
 interface Application {
   id: number;
@@ -8,7 +9,7 @@ interface Application {
   job_title: string;
   company: string;
   applied_at: string;
-  status: 'pending' | 'applied' | 'rejected' | 'interview' | 'accepted';
+  status: "pending" | "applied" | "rejected" | "interview" | "accepted";
   platform: string;
   application_url?: string;
 }
@@ -16,17 +17,17 @@ interface Application {
 export default function ApplicationsList() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/applications');
+      const response = await fetch(API_ENDPOINTS.APPLICATIONS);
       const data = await response.json();
       if (data.success) {
         setApplications(data.data);
       }
     } catch (error) {
-      console.error('Error fetching applications:', error);
+      console.error("Error fetching applications:", error);
     } finally {
       setLoading(false);
     }
@@ -38,40 +39,40 @@ export default function ApplicationsList() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'applied':
-        return 'bg-blue-100 text-blue-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
-      case 'interview':
-        return 'bg-purple-100 text-purple-800';
-      case 'accepted':
-        return 'bg-green-100 text-green-800';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "applied":
+        return "bg-blue-100 text-blue-800";
+      case "rejected":
+        return "bg-red-100 text-red-800";
+      case "interview":
+        return "bg-purple-100 text-purple-800";
+      case "accepted":
+        return "bg-green-100 text-green-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending':
-        return '⏳';
-      case 'applied':
-        return '📧';
-      case 'rejected':
-        return '❌';
-      case 'interview':
-        return '🗣️';
-      case 'accepted':
-        return '✅';
+      case "pending":
+        return "⏳";
+      case "applied":
+        return "📧";
+      case "rejected":
+        return "❌";
+      case "interview":
+        return "🗣️";
+      case "accepted":
+        return "✅";
       default:
-        return '❓';
+        return "❓";
     }
   };
 
-  const filteredApplications = applications.filter(app => 
-    filter === 'all' || app.status === filter
+  const filteredApplications = applications.filter(
+    (app) => filter === "all" || app.status === filter
   );
 
   if (loading) {
@@ -119,10 +120,9 @@ export default function ApplicationsList() {
             Nenhuma candidatura encontrada
           </h3>
           <p className="text-gray-500">
-            {filter === 'all' 
-              ? 'O bot ainda não enviou nenhuma candidatura.'
-              : `Nenhuma candidatura com status "${filter}".`
-            }
+            {filter === "all"
+              ? "O bot ainda não enviou nenhuma candidatura."
+              : `Nenhuma candidatura com status "${filter}".`}
           </p>
         </div>
       ) : (
@@ -159,16 +159,25 @@ export default function ApplicationsList() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
-                        <span className="mr-1">{getStatusIcon(application.status)}</span>
-                        {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                          application.status
+                        )}`}
+                      >
+                        <span className="mr-1">
+                          {getStatusIcon(application.status)}
+                        </span>
+                        {application.status.charAt(0).toUpperCase() +
+                          application.status.slice(1)}
                       </span>
                       <div className="text-sm text-gray-500">
-                        {new Date(application.applied_at).toLocaleDateString('pt-BR')}
+                        {new Date(application.applied_at).toLocaleDateString(
+                          "pt-BR"
+                        )}
                       </div>
                     </div>
                   </div>
-                  
+
                   {application.application_url && (
                     <div className="mt-2">
                       <a
@@ -196,17 +205,23 @@ export default function ApplicationsList() {
               📊 Resumo de Candidaturas
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {['pending', 'applied', 'interview', 'accepted', 'rejected'].map((status) => {
-                const count = applications.filter(app => app.status === status).length;
-                return (
-                  <div key={status} className="text-center">
-                    <div className="text-2xl font-bold text-gray-900">{count}</div>
-                    <div className="text-sm text-gray-500 capitalize">
-                      {getStatusIcon(status)} {status}
+              {["pending", "applied", "interview", "accepted", "rejected"].map(
+                (status) => {
+                  const count = applications.filter(
+                    (app) => app.status === status
+                  ).length;
+                  return (
+                    <div key={status} className="text-center">
+                      <div className="text-2xl font-bold text-gray-900">
+                        {count}
+                      </div>
+                      <div className="text-sm text-gray-500 capitalize">
+                        {getStatusIcon(status)} {status}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                }
+              )}
             </div>
           </div>
         </div>

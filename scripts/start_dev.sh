@@ -64,8 +64,8 @@ if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null ; then
     exit 1
 fi
 
-if lsof -Pi :5000 -sTCP:LISTEN -t >/dev/null ; then
-    echo -e "${RED}❌ Porta 5000 já está em uso (Backend)${NC}"
+if lsof -Pi :5001 -sTCP:LISTEN -t >/dev/null ; then
+    echo -e "${RED}❌ Porta 5001 já está em uso (Backend)${NC}"
     exit 1
 fi
 
@@ -97,8 +97,8 @@ echo ""
 echo -e "${GREEN}🎉 JobHunter Bot iniciado com sucesso!${NC}"
 echo ""
 echo -e "${BLUE}📱 Frontend (Next.js):${NC} http://localhost:3000"
-echo -e "${BLUE}🔧 Backend (Flask):${NC} http://localhost:5000"
-echo -e "${BLUE}📊 API Health:${NC} http://localhost:5000/api/health"
+echo -e "${BLUE}🔧 Backend (Flask):${NC} http://localhost:5001"
+echo -e "${BLUE}📊 API Health:${NC} http://localhost:5001/api/health"
 echo ""
 echo -e "${YELLOW}💡 Pressione Ctrl+C para parar todos os serviços${NC}"
 echo ""

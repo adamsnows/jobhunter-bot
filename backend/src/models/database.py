@@ -2,6 +2,7 @@
 Configuração e gerenciamento do banco de dados
 """
 import sqlite3
+import os
 from typing import List, Optional, Dict, Any
 from contextlib import contextmanager
 from pathlib import Path
@@ -10,6 +11,18 @@ from datetime import datetime
 
 from .job import Job, JobSource, JobStatus
 from .application import Application, ApplicationStatus, ApplicationMethod
+
+
+def get_database_url():
+    """Retorna a URL do banco de dados para SQLAlchemy"""
+    # Usa variável de ambiente se disponível, caso contrário usa SQLite local
+    db_url = os.environ.get("DATABASE_URL", None)
+    if not db_url:
+        # Certifica que o diretório data existe
+        data_dir = Path("data")
+        data_dir.mkdir(parents=True, exist_ok=True)
+        db_url = f"sqlite:///data/jobhunter.db"
+    return db_url
 
 
 class Database:
