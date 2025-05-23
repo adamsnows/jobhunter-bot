@@ -6,7 +6,7 @@ Um bot inteligente em Python para buscar automaticamente vagas de emprego basead
 
 - 🔍 **Busca automatizada** em múltiplas plataformas de emprego
 - 🎯 **Filtragem inteligente** baseada em suas habilidades e preferências
-- 📧 **Notificações automáticas** via email, Telegram ou Slack
+- 📧 **Notificações automáticas** via email, Telegram, WhatsApp ou Slack
 - 🚀 **Candidatura automática** com envio de currículo e carta de apresentação
 - 📝 **Templates personalizáveis** para emails de candidatura
 - 🎨 **Geração automática** de cartas de apresentação baseadas na vaga
@@ -26,23 +26,25 @@ Um bot inteligente em Python para buscar automaticamente vagas de emprego basead
 - **Template engine**: Jinja2 para geração de cartas personalizadas
 - **Agendamento**: schedule
 - **Banco de dados**: SQLite (local) ou PostgreSQL (produção)
-- **Notificações**: SMTP, Telegram Bot API
+- **Notificações**: SMTP, Telegram Bot API, WhatsApp Business API
 - **Análise de texto**: NLTK/spaCy para matching de skills
 
 ## 🚀 Plataformas Suportadas
 
-### Implementadas
-- [ ] **LinkedIn Jobs**
+### Implementadas (MVP v1.0)
+- [x] **LinkedIn Jobs** - API oficial e scraping
+- [x] **X (Twitter)** - Busca por hashtags #jobs #hiring #developer #python
+
+### Próximas Versões
 - [ ] **Indeed**
 - [ ] **Glassdoor**
 - [ ] **InfoJobs** (Brasil)
 - [ ] **Catho** (Brasil)
-
-### Planejadas
 - [ ] **AngelList** (Startups)
 - [ ] **Stack Overflow Jobs**
 - [ ] **GitHub Jobs**
 - [ ] **Remote.co**
+- [ ] **Discord** - Servidores de comunidades tech
 
 ## 📦 Instalação
 
@@ -172,6 +174,11 @@ NOTIFICATION_EMAIL=seu-email@gmail.com
 TELEGRAM_BOT_TOKEN=your-bot-token
 TELEGRAM_CHAT_ID=your-chat-id
 
+# WhatsApp Business API (opcional)
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
+WHATSAPP_ACCESS_TOKEN=your-access-token
+WHATSAPP_RECIPIENT_NUMBER=+5511999999999
+
 # Configurações de candidatura automática
 AUTO_APPLY_ENABLED=true
 MAX_APPLICATIONS_PER_DAY=10
@@ -235,7 +242,7 @@ PROFILE = {
 ```text
 Prezado(a) Recrutador(a),
 
-Meu nome é {{NOME}} e tenho {{EXPERIENCIA_ANOS}} anos de experiência em desenvolvimento de software. 
+Meu nome é {{NOME}} e tenho {{EXPERIENCIA_ANOS}} anos de experiência em desenvolvimento de software.
 
 Estou muito interessado(a) na vaga de {{CARGO}} na {{EMPRESA}}. Acredito que minhas habilidades em {{SKILLS_MATCH}} se alinham perfeitamente com os requisitos da posição.
 
@@ -332,8 +339,7 @@ jobhunter-bot/
 │   │   ├── __init__.py
 │   │   ├── base_scraper.py        # Classe base para scrapers
 │   │   ├── linkedin_scraper.py    # Scraper do LinkedIn
-│   │   ├── indeed_scraper.py      # Scraper do Indeed
-│   │   └── infojobs_scraper.py    # Scraper do InfoJobs
+│   │   └── x_scraper.py           # Scraper do X (Twitter)
 │   ├── models/
 │   │   ├── __init__.py
 │   │   ├── job.py                 # Modelo de vaga
@@ -415,7 +421,7 @@ jobhunter-bot/
 - Email com resumo diário/semanal
 - Notificações instantâneas para vagas high-match
 - Alertas de candidaturas enviadas
-- Integração com Telegram/Slack
+- Integração com Telegram/WhatsApp/Slack
 - Dashboard web (planejado)
 
 ### 6. Relatórios
@@ -430,7 +436,7 @@ jobhunter-bot/
 ### Versão 1.0 (MVP)
 - [x] Estrutura básica do projeto
 - [ ] Scraper do LinkedIn
-- [ ] Scraper do Indeed
+- [ ] Scraper do X (Twitter)
 - [ ] Sistema de notificação por email
 - [ ] Sistema de candidatura automática
 - [ ] Templates de carta de apresentação
