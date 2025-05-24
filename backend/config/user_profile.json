@@ -1,0 +1,32 @@
+{
+  "skills": [
+    "python",
+    "django",
+    "flask",
+    "postgresql",
+    "docker",
+    "git"
+  ],
+  "experience_years": 3,
+  "preferred_technologies": [
+    "python",
+    "django",
+    "postgresql",
+    "docker",
+    "aws"
+  ],
+  "preferred_roles": [
+    "backend developer",
+    "python developer",
+    "software engineer",
+    "full stack developer"
+  ],
+  "location_preferences": [
+    "são paulo",
+    "sp",
+    "remote",
+    "remoto"
+  ],
+  "salary_min": 5000,
+  "salary_max": 15000
+}

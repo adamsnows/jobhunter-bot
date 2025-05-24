@@ -15,7 +15,10 @@ from urllib.parse import urljoin, urlencode
 import re
 
 from ..models.job import Job
-from ..utils.logger import get_logger
+
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 
 class BaseScraper(ABC):
@@ -32,7 +35,7 @@ class BaseScraper(ABC):
             config: Dictionary containing scraper configuration
         """
         self.config = config
-        self.logger = get_logger(self.__class__.__name__)
+        self.logger = logger
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'

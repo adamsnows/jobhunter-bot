@@ -1,34 +1,88 @@
 """
 Configuração e gerenciamento do banco de dados
 """
-import sqlite3
 import os
 from typing import List, Optional, Dict, Any
 from contextlib import contextmanager
 from pathlib import Path
 import json
 from datetime import datetime
+from sqlalchemy import create_engine, Column, String, DateTime, Boolean, Float, Integer, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 
 from .job import Job, JobSource, JobStatus
 from .application import Application, ApplicationStatus, ApplicationMethod
 
+Base = declarative_base()
+
 
 def get_database_url():
     """Retorna a URL do banco de dados para SQLAlchemy"""
-    # Usa variável de ambiente se disponível, caso contrário usa SQLite local
+    # Usa PostgreSQL se disponível, caso contrário SQLite local
     db_url = os.environ.get("DATABASE_URL", None)
     if not db_url:
-        # Certifica que o diretório data existe
+        # Fallback para SQLite local
         data_dir = Path("data")
         data_dir.mkdir(parents=True, exist_ok=True)
         db_url = f"sqlite:///data/jobhunter.db"
     return db_url
 
 
-class Database:
-    """Gerenciador do banco de dados SQLite"""
+class JobRecord(Base):
+    """SQLAlchemy model for jobs table"""
+    __tablename__ = 'jobs'
 
-    def __init__(self, db_path: str = "data/jobs.db"):
+    id = Column(String, primary_key=True)
+    title = Column(String, nullable=False)
+    company = Column(String, nullable=False)
+    location = Column(String)
+    description = Column(Text)
+    requirements = Column(Text)
+    salary_min = Column(Float)
+    salary_max = Column(Float)
+    salary_currency = Column(String, default='BRL')
+    url = Column(String)
+    contact_email = Column(String)
+    source = Column(String, nullable=False)
+    status = Column(String, default='new')
+    remote_ok = Column(Boolean, default=False)
+    contract_type = Column(String)
+    required_skills = Column(Text)  # JSON
+    nice_to_have_skills = Column(Text)  # JSON
+    match_score = Column(Float)
+    posted_date = Column(DateTime)
+    found_date = Column(DateTime, nullable=False, default=datetime.utcnow)
+
+
+class ApplicationRecord(Base):
+    """SQLAlchemy model for applications table"""
+    __tablename__ = 'applications'
+
+    id = Column(String, primary_key=True)
+    job_id = Column(String, nullable=False)
+    job_title = Column(String, nullable=False)
+    company = Column(String, nullable=False)
+    contact_email = Column(String, nullable=False)
+    status = Column(String, default='pending')
+    method = Column(String, default='email')
+    sent_date = Column(DateTime, default=datetime.utcnow)
+    response_date = Column(DateTime)
+    notes = Column(Text)
+
+
+class Database:
+    """Gerenciador do banco de dados com SQLAlchemy"""
+
+    def __init__(self, db_url: Optional[str] = None):
+        self.db_url = db_url or get_database_url()
+        self.engine = create_engine(self.db_url)
+        self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        self.init_database()
+
+    def init_database(self):
+        """Inicializa as tabelas do banco"""
+        Base.metadata.create_all(bind=self.engine)
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.init_database()

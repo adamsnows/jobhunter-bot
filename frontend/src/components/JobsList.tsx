@@ -85,7 +85,7 @@ export default function JobsList() {
             setPage(1);
             fetchJobs();
           }}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm  bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-gray-600 dark:border  duration-300"
         >
           <FiRefreshCw className="mr-2" />
           Atualizar
@@ -106,7 +106,7 @@ export default function JobsList() {
           </div>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-gray-600 dark:border flex items-center duration-300"
           >
             <FiSearch className="mr-2" />
             Buscar

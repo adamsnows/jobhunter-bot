@@ -1,4 +1,13 @@
 "use client";
+import { CiSearch, CiSettings, CiStreamOff, CiStreamOn } from "react-icons/ci";
+import { FaChartBar, FaSearch } from "react-icons/fa";
+import { GiSchoolBag } from "react-icons/gi";
+import {
+  MdOutlineMarkEmailRead,
+  MdOutlineShowChart,
+  MdQueryStats,
+} from "react-icons/md";
+import { SiMinutemailer } from "react-icons/si";
 
 interface DashboardStatsProps {
   stats: any;
@@ -10,7 +19,10 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       <div className="animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow p-6">
+            <div
+              key={i}
+              className="bg-white dark:bg-gray-800 shadow-sm border dark:border-gray-700 rounded-lg overflow-hidden"
+            >
               <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
               <div className="h-8 bg-gray-200 rounded w-1/2"></div>
             </div>
@@ -24,28 +36,28 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
     {
       title: "Total de Vagas",
       value: stats.total_jobs || 0,
-      icon: "💼",
+      icon: <GiSchoolBag />,
       change: `+${stats.jobs_today || 0} hoje`,
       changeType: "positive" as const,
     },
     {
       title: "Candidaturas Enviadas",
       value: stats.total_applications || 0,
-      icon: "📧",
+      icon: <MdOutlineMarkEmailRead />,
       change: `+${stats.applications_today || 0} hoje`,
       changeType: "positive" as const,
     },
     {
       title: "Taxa de Sucesso",
       value: `${stats.success_rate || 0}%`,
-      icon: "📈",
+      icon: <MdOutlineShowChart />,
       change: "dos envios",
       changeType: "neutral" as const,
     },
     {
       title: "Status do Bot",
       value: stats.daemon_running ? "Ativo" : "Parado",
-      icon: stats.daemon_running ? "🟢" : "🔴",
+      icon: stats.daemon_running ? <CiStreamOn /> : <CiStreamOff />,
       change: stats.daemon_running ? "Procurando vagas" : "Inativo",
       changeType: stats.daemon_running ? "positive" : ("negative" as const),
     },
@@ -56,13 +68,18 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards.map((stat, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-sm border p-6">
+          <div
+            key={index}
+            className="bg-white dark:bg-gray-800 shadow-sm border dark:border-gray-700  overflow-hidden  rounded-lg  p-6 dark:text-gray-400"
+          >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   {stat.title}
                 </p>
-                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-gray-400">
+                  {stat.value}
+                </p>
               </div>
               <div className="text-2xl">{stat.icon}</div>
             </div>
@@ -84,9 +101,9 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Jobs */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
+        <div className=" dark:bg-gray-800 shadow-sm border dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:text-gray-400">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-400">
               Vagas Recentes
             </h3>
           </div>
@@ -96,10 +113,10 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
                 <div key={index} className="px-6 py-4">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-400">
                         {job[0]} {/* title */}
                       </p>
-                      <p className="text-sm text-gray-500 truncate">
+                      <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                         {job[1]} • {job[2]} {/* company • location */}
                       </p>
                     </div>
@@ -115,8 +132,10 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
                 </div>
               ))
             ) : (
-              <div className="px-6 py-8 text-center text-gray-500">
-                <span className="text-2xl mb-2 block">🔍</span>
+              <div className="px-6 py-8 text-center text-gray-500 items-center justify-center flex flex-col">
+                <span className="text-2xl mb-2 block">
+                  <CiSearch />
+                </span>
                 Nenhuma vaga encontrada ainda
               </div>
             )}
@@ -124,9 +143,9 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
         </div>
 
         {/* Recent Applications */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
+        <div className="dark:bg-gray-800 shadow-sm border dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:text-gray-400">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-400">
               Candidaturas Recentes
             </h3>
           </div>
@@ -170,8 +189,10 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
                   </div>
                 ))
             ) : (
-              <div className="px-6 py-8 text-center text-gray-500">
-                <span className="text-2xl mb-2 block">📧</span>
+              <div className="px-6 py-8 text-center text-gray-500 items-center justify-center flex flex-col">
+                <span className="text-2xl mb-2 block">
+                  <SiMinutemailer />
+                </span>
                 Nenhuma candidatura enviada ainda
               </div>
             )}
@@ -180,25 +201,33 @@ export default function DashboardStats({ stats }: DashboardStatsProps) {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
+      <div className="dark:bg-gray-800  dark:border-gray-700 rounded-lg overflow-hidden  dark:text-gray-400  shadow-sm border p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4 dark:text-gray-400">
           Ações Rápidas
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <span className="mr-2">🔍</span>
+          <button className="dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <span className="mr-2">
+              <FaSearch />
+            </span>
             Buscar Vagas Agora
           </button>
-          <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <span className="mr-2">📊</span>
+          <button className="dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <span className="mr-2">
+              <FaChartBar />
+            </span>
             Relatório Detalhado
           </button>
-          <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <span className="mr-2">⚙️</span>
+          <button className="dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <span className="mr-2 text-lg">
+              <CiSettings />
+            </span>
             Configurações
           </button>
-          <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-            <span className="mr-2">📝</span>
+          <button className="dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <span className="mr-2 text-lg">
+              <MdQueryStats />
+            </span>
             Ver Logs
           </button>
         </div>

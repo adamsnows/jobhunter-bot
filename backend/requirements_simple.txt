@@ -1,0 +1,28 @@
+# JobHunter Bot - Dependências Essenciais
+python-dotenv==1.0.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# Email e web scraping básico
+html2text==2020.1.16
+
+# Database (SQLite incluído no Python, PostgreSQL opcional)
+# Para PostgreSQL no futuro (descomente quando necessário):
+# psycopg2-binary==2.9.7
+# sqlalchemy==2.0.23
+
+# Logging e utilitários
+python-dateutil==2.8.2
+
+# Para scraping avançado (opcional):
+# selenium==4.15.2
+# undetected-chromedriver==3.5.4
+# webdriver-manager==4.0.1
+
+# Para APIs do Twitter/X (opcional):
+# tweepy==4.14.0
+
+# Para interface web (já instalado no frontend):
+# fastapi==0.104.1
+# uvicorn==0.24.0

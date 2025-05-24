@@ -2,6 +2,9 @@
 
 import { API_ENDPOINTS } from "@/utils/constants";
 import { useEffect, useState } from "react";
+import { AiTwotoneMail } from "react-icons/ai";
+import { FaVoicemail } from "react-icons/fa";
+import { IoIosRefresh } from "react-icons/io";
 
 interface Application {
   id: number;
@@ -87,14 +90,14 @@ export default function ApplicationsList() {
     <div className="space-y-6">
       {/* Header com filtros */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">
-          📧 Candidaturas Enviadas
+        <h2 className="text-2xl font-bold dark:text-gray-400 gap-2 flex items-center">
+          <FaVoicemail /> Candidaturas Enviadas
         </h2>
         <div className="flex space-x-2">
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm  bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-gray-600 dark:border  duration-300"
           >
             <option value="all">Todas</option>
             <option value="pending">Pendentes</option>
@@ -105,18 +108,20 @@ export default function ApplicationsList() {
           </select>
           <button
             onClick={fetchApplications}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium shadow-sm  bg-blue-600 text-white rounded-md hover:bg-blue-700 dark:bg-gray-700 dark:hover:bg-gray-800 dark:border-gray-600 dark:border  duration-300 gap-2"
           >
-            🔄 Atualizar
+            <IoIosRefresh /> Atualizar
           </button>
         </div>
       </div>
 
       {/* Lista de candidaturas */}
       {filteredApplications.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">📭</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+        <div className="text-center py-12 flex items-center justify-center flex-col">
+          <div className="text-6xl mb-4 text-gray-600">
+            <AiTwotoneMail />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-400 mb-2">
             Nenhuma candidatura encontrada
           </h3>
           <p className="text-gray-500">

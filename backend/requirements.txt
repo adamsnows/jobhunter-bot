@@ -1,53 +1,40 @@
-# Web scraping
+# Essential requirements for JobHunter Bot backend
 requests==2.31.0
 beautifulsoup4==4.12.2
 selenium==4.15.0
-lxml==4.9.3
 webdriver-manager==4.0.1
 undetected-chromedriver==3.5.4
-
-# HTTP client enhancements
 requests-html==0.10.0
 httpx==0.25.0
-
-# Email and templates
 Jinja2==3.1.2
 python-dotenv==1.0.0
-
-# Document processing
 python-docx==0.8.11
 PyPDF2==3.0.1
 reportlab==4.0.4
 
 # Database
 SQLAlchemy==2.0.21
+psycopg2-binary==2.9.7
+alembic==1.12.0
 
-# NLP and text processing
-nltk==3.8.1
-spacy==3.7.2
-fuzzywuzzy==0.18.0
-python-Levenshtein==0.21.1
-
-# Scheduling and automation
+# Scheduling
 schedule==1.2.0
 APScheduler==3.10.4
 
-# Notifications
-telebot==0.0.5
-requests==2.31.0  # For WhatsApp Business API
-
-# Web framework
+# Web framework for API
 flask==2.3.3
 flask-sqlalchemy==3.0.5
 flask-cors==4.0.0
 
-# Testing
+# Social media APIs
+tweepy==4.15.0
+
+# Additional utilities
+setuptools==75.8.0
+flask-cors==4.0.0
 pytest==7.4.2
 pytest-mock==3.11.1
-
-# Logging and monitoring
 loguru==0.7.2
-
-# Utilities
 python-dateutil==2.8.2
 pytz==2023.3
+# Excluded: nltk, spacy, blis, lxml, fuzzywuzzy, python-Levenshtein (NLP and C-extension functionality)

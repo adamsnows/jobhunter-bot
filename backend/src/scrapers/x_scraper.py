@@ -9,10 +9,13 @@ import re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import json
+import logging
 
 from .base_scraper import BaseScraper
 from ..models.job import Job, JobSource, JobStatus
-from ..utils.logger import get_logger
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 
 class XScraper(BaseScraper):

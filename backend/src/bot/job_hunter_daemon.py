@@ -17,7 +17,7 @@ from dataclasses import dataclass
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from src.models.database import DatabaseManager
+from src.models.database import Database
 from src.models.job import Job
 from src.models.application import Application
 from src.scrapers.linkedin_scraper import LinkedInScraper
@@ -83,7 +83,7 @@ class JobHunterDaemon:
         self.pid_file = "/tmp/jobhunter_daemon.pid"
 
         # Componentes
-        self.db = DatabaseManager()
+        self.db = Database()
         self.job_matcher = JobMatcher()
         self.application_sender = ApplicationSender()
 
