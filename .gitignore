@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# LinkedIn cookies file
+cookies.pkl
+
+# Collected emails file
+collected_emails.txt
+
 # C extensions
 *.so
 
